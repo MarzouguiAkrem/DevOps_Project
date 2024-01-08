@@ -19,13 +19,13 @@ pipeline {
 
         stage('Build and Push Docker Image') {
             steps {
-                // Build de l'image Docker
                 script {
+                    // Build de l'image Docker
                     docker.build(env.DOCKER_IMAGE)
                 }
-
-                // Connexion au registre Docker et push de l'image
+                
                 script {
+                    // Connexion au registre Docker et push de l'image
                     withCredentials([usernamePassword(credentialsId: env.REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
                         sh "docker push ${env.DOCKER_IMAGE}"
