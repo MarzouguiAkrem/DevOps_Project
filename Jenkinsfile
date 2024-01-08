@@ -16,11 +16,16 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Build du projet"
-                // Ajoutez les commandes de build ici
+                // Se déplacer dans le répertoire du projet
+                dir('backend') {
+                    // Configurer Node.js (si nécessaire)
+                    // tools {
+                    //     nodejs 'your-nodejs-tool-name'
+                    // }
 
-                // Exemple pour un projet Node.js (à adapter selon votre projet)
-                sh 'npm install'
-                sh 'npm run build'
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
 
@@ -28,10 +33,6 @@ pipeline {
             steps {
                 echo "Déploiement du projet"
                 // Ajoutez les commandes de déploiement ici
-
-                // Exemple pour le déploiement sur Kubernetes
-                sh 'kubectl apply -f k8s/deployment.yaml -n your-namespace'
-                sh 'kubectl rollout status deployment/your-deployment-name -n your-namespace'
             }
         }
     }
