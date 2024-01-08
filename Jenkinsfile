@@ -13,21 +13,22 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupérer le code depuis le référentiel Git
-                git branch: 'main', url: 'https://github.com/MarzouguiAKrem/your-mern-project.git'
+                git branch: 'main', url: 'https://github.com/MarzouguiAKrem/DevOps_Project.git'
             }
         }
 
         stage('Build and Push Docker Image') {
             steps {
+                // Build de l'image Docker
                 script {
-                    // Build de l'image Docker
                     docker.build(env.DOCKER_IMAGE)
+                }
 
-                    // Connexion au registre Docker et push de l'image
+                // Connexion au registre Docker et push de l'image
+                script {
                     withCredentials([usernamePassword(credentialsId: env.REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        docker.withRegistry("https://registry.hub.docker.com", "DOCKER_USER", "DOCKER_PASS") {
-                            docker.image(env.DOCKER_IMAGE).push()
-                        }
+                        sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
+                        sh "docker push ${env.DOCKER_IMAGE}"
                     }
                 }
             }
