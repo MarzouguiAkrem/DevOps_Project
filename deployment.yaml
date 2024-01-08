@@ -6,14 +6,14 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: your-app
+      app:mern_project
   template:
     metadata:
       labels:
-        app: your-app
+        app:mern_project
     spec:
       containers:
       - name: your-container
-        image: your-docker-image-name:latest
+        image: akrem106/image
         ports:
         - containerPort: 5000

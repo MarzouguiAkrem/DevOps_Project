@@ -1,6 +1,6 @@
 replicaCount: 3
 image:
-  repository: your-docker-image-name
+  repository: akrem106/image
   tag: latest
 service:
   type: NodePort
