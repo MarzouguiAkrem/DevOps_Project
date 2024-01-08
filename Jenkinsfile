@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupérer le code depuis le référentiel Git
-                git branch: 'main', url: 'https://github.com/MarzouguiAKrem/DevOps_Project.git'
+                git branch: 'master', url: 'https://github.com/MarzouguiAKrem/DevOps_Project.git'
             }
         }
 
