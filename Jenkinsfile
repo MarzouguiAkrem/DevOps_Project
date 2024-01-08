@@ -1,67 +1,28 @@
 pipeline {
-    agent any
+agent any
+triggers {
+pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
+}
+stages {
+stage('Checkout') {
+steps {
+echo "Récupération du code source"
+checkout scm
+}
+}
+stage('Build') {
+steps {
+echo "Build du projet"
 
-    environment {
-        DOCKER_IMAGE = 'your-docker-image-name'
-        REGISTRY_CREDENTIALS = 'your-docker-hub-credentials-id'
-        KUBE_NAMESPACE = 'your-kubernetes-namespace'
-        KUBE_DEPLOYMENT_NAME = 'your-k8s-deployment-name'
-        KUBE_SERVICE_NAME = 'your-k8s-service-name'
-    }
+// Ajoutez les commandes de build ici
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Récupérer le code depuis le référentiel Git
-                git branch: 'master', url: 'https://github.com/MarzouguiAKrem/DevOps_Project.git'
-            }
-        }
-
-        stage('Build and Push Docker Image') {
-            steps {
-                script {
-                    // Build de l'image Docker
-                    docker.build(env.DOCKER_IMAGE)
-                }
-                
-                script {
-                    // Connexion au registre Docker et push de l'image
-                    withCredentials([usernamePassword(credentialsId: env.REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
-                        sh "docker push ${env.DOCKER_IMAGE}"
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    // Appliquer les manifestes Kubernetes
-                    sh "kubectl apply -f k8s/deployment.yaml -n ${env.KUBE_NAMESPACE}"
-
-                    // Attendre que le déploiement soit prêt
-                    sh "kubectl rollout status deployment/${env.KUBE_DEPLOYMENT_NAME} -n ${env.KUBE_NAMESPACE}"
-
-                    // Appliquer le service NodePort (pour le test local)
-                    sh "kubectl apply -f k8s/service-nodeport.yaml -n ${env.KUBE_NAMESPACE}"
-                }
-            }
-        }
-
-        stage('Cleanup') {
-            steps {
-                // Nettoyer les ressources temporaires si nécessaire
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment successful!'
-        }
-        failure {
-            echo 'Deployment failed. Check the logs for details.'
-        }
-    }
+}
+}
+stage('Deploy') {
+steps {
+echo "Déploiement du projet"
+// Ajoutez les commandes de déploiement ici
+}
+}
+}
 }
