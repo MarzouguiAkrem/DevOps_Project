@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "your-chart-name.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "your-chart-name.name" . }}
+      release: {{ .Release.Name }}
+      chart: {{ include "your-chart-name.chart" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "your-chart-name.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: your-container
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+spec:
+  selector:
+    app: {{ include "your-chart-name.name" . }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: {{ .Values.service.type }}
+  {{- if eq .Values.service.type "NodePort" }}
+  nodePort: {{ .Values.service.nodePort }}
+  {{- end }}

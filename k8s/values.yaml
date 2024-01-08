@@ -1,0 +1,8 @@
+replicaCount: 3
+image:
+  repository: your-docker-image-name
+  tag: latest
+service:
+  type: NodePort
+  name: your-service-nodeport
+  nodePort: 30001
