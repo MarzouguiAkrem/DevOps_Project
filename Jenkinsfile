@@ -29,10 +29,11 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+         stages {
+        stage('Checkout') {
             steps {
-                echo "Déploiement du projet"
-                // Ajoutez les commandes de déploiement ici
+                // Récupérer le code depuis le référentiel Git
+                git branch: 'master', url: 'https://github.com/your-username/DevOps_project.git'
             }
         }
     }
